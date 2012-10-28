@@ -1,0 +1,48 @@
+PATH
+  remote: .
+  specs:
+    feature_creep (0.0.1)
+      redis
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    bourne (1.0)
+      mocha (= 0.9.8)
+    coderay (1.0.7)
+    diff-lcs (1.1.3)
+    git (1.2.5)
+    jeweler (1.6.4)
+      bundler (~> 1.0)
+      git (>= 1.2.5)
+      rake
+    method_source (0.8)
+    mocha (0.9.8)
+      rake
+    pry (0.9.10)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.3.1)
+    rake (0.9.2.2)
+    redis (3.0.2)
+    rspec (2.10.0)
+      rspec-core (~> 2.10.0)
+      rspec-expectations (~> 2.10.0)
+      rspec-mocks (~> 2.10.0)
+    rspec-core (2.10.1)
+    rspec-expectations (2.10.0)
+      diff-lcs (~> 1.1.3)
+    rspec-mocks (2.10.1)
+    slop (3.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bourne (= 1.0)
+  bundler (>= 1.0.0)
+  feature_creep!
+  jeweler (~> 1.6.4)
+  mocha (= 0.9.8)
+  pry (= 0.9.10)
+  rspec (~> 2.10.0)
