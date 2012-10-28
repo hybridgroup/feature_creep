@@ -7,6 +7,7 @@ class FeatureCreep
     end
 
     def activate_globally(feature)
+      add_feature(feature)
       @redis.sadd(global_key, feature)
     end
 
@@ -15,6 +16,7 @@ class FeatureCreep
     end
 
     def activate_scope(feature, scope)
+      add_feature(feature)
       @redis.sadd(scope_key(feature), scope)
     end
 
@@ -30,6 +32,7 @@ class FeatureCreep
     end
 
     def activate_agent_id(feature, agent_id)
+      add_feature(feature)
       @redis.sadd(agent_id_key(feature), agent_id)
     end
 
@@ -56,27 +59,12 @@ class FeatureCreep
       @redis.del(percentage_key(feature))
     end
 
-    def info(feature = nil)
-      if feature
-        {
-          :percentage => (active_percentage(feature) || 0).to_i,
-          :scopes     => active_scopes(feature).map { |g| g.to_sym },
-          :agent_ids  => active_agent_id_ids(feature),
-          :global     => active_global_features
-        }
-      else
-        {
-          :features   => current_features
-        }
-      end
-    end
-
     def active_scopes(feature)
       @redis.smembers(scope_key(feature)) || []
     end
 
-    def active_agent_id_ids(feature)
-      @redis.smembers(agent_id_key(feature)).map { |id| id.to_i }
+    def active_agent_ids(feature)
+      @redis.smembers(agent_id_key(feature))
     end
 
     def active_global_features
@@ -101,12 +89,12 @@ class FeatureCreep
       agent_id % 100 < percentage.to_i
     end
 
-    def current_features
-      @redis.smembers(@key_prefix)
+    def features
+      @redis.smembers(@key_prefix).map(&:to_sym)
     end
 
     def add_feature(feature)
-      redis.sadd(@key_prefix, feature)
+      @redis.sadd(@key_prefix, feature)
     end
 
     private

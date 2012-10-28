@@ -6,7 +6,25 @@ describe "FeatureCreep" do
     scopes = {
       :fivesonly => lambda { |agent_id| agent_id == 5 }
     }
-    @feature_creep = FeatureCreep.new(@datastore, {:scopes => scopes})
+    @feature_creep = FeatureCreep.new(@datastore, {:scopes => scopes, :features => [:test1, :test2]})
+  end
+
+  describe ".new" do
+    it "sets features" do
+      @feature_creep.features.should == [:test1, :test2]
+    end
+
+    it "sets @scopes" do
+      @feature_creep.scopes['fivesonly'].should be_a Proc
+    end
+
+    it "sets @info" do
+      @feature_creep.info.should be_a Hash
+    end
+
+    it "sets @warden" do
+      @feature_creep.warden.should be_a Proc
+    end
   end
 
   describe "when a scope is activated" do
@@ -177,6 +195,7 @@ describe "FeatureCreep" do
   describe "#info" do
     context "global features" do
       let(:features) { [:signup, :chat, :table] }
+      let(:available_features) { [:chat, :test1, :signup, :test2, :table] }
 
       before do
         features.each do |f|
@@ -185,7 +204,7 @@ describe "FeatureCreep" do
       end
 
       it "returns all global features" do
-        @feature_creep.info.should eq({ :global => features.reverse })
+        @feature_creep.info.should eq({ :global => features.reverse, :available_features => available_features })
       end
     end
 
@@ -202,8 +221,9 @@ describe "FeatureCreep" do
         @feature_creep.info(:chat).should == {
           :percentage => 10,
           :scopes     => [:greeters, :caretakers],
-          :agent_ids      => [42],
-          :global     => [:signup]
+          :agent_ids      => ["42"],
+          :global     => [:signup],
+          :available_features => [:chat, :test1, :signup, :test2]
         }
       end
     end
@@ -214,7 +234,8 @@ describe "FeatureCreep" do
           :percentage => 0,
           :scopes     => [],
           :agent_ids      => [],
-          :global     => []
+          :global     => [],
+          :available_features=>[:test1, :test2]
         }
       end
     end

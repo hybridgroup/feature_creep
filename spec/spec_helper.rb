@@ -5,6 +5,7 @@ require 'feature_creep/redis_datastore'
 require 'rspec'
 require 'bourne'
 require 'redis'
+require 'pry'
 
 RSpec.configure do |config|
   config.mock_with :mocha
