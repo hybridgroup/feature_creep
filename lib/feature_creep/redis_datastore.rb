@@ -7,7 +7,6 @@ class FeatureCreep
     end
 
     def activate_globally(feature)
-      add_feature(feature)
       @redis.sadd(global_key, feature)
     end
 
@@ -16,7 +15,6 @@ class FeatureCreep
     end
 
     def activate_scope(feature, scope)
-      add_feature(feature)
       @redis.sadd(scope_key(feature), scope)
     end
 
@@ -32,7 +30,6 @@ class FeatureCreep
     end
 
     def activate_agent_id(feature, agent_id)
-      add_feature(feature)
       @redis.sadd(agent_id_key(feature), agent_id)
     end
 
@@ -95,6 +92,10 @@ class FeatureCreep
 
     def add_feature(feature)
       @redis.sadd(@key_prefix, feature)
+    end
+
+    def remove_feature(feature)
+      @redis.srem(@key_prefix, feature)
     end
 
     private
