@@ -6,20 +6,38 @@ class FeatureCreep
       @redis = datastore || Redis.new
     end
 
+    # Activate Methods
     def activate_globally(feature)
       @redis.sadd(global_key, feature)
-    end
-
-    def deactivate_globally(feature)
-      @redis.srem(global_key, feature)
     end
 
     def activate_scope(feature, scope)
       @redis.sadd(scope_key(feature), scope)
     end
 
+    def activate_agent_id(feature, agent_id)
+      @redis.sadd(agent_id_key(feature), agent_id)
+    end
+
+    def activate_percentage(feature, percentage)
+      @redis.set(percentage_key(feature), percentage)
+    end
+
+    # Deactivate Methods
+    def deactivate_globally(feature)
+      @redis.srem(global_key, feature)
+    end
+
     def deactivate_scope(feature, scope)
       @redis.srem(scope_key(feature), scope)
+    end
+
+    def deactivate_agent_id(feature, agent_id)
+      @redis.srem(agent_id_key(feature), agent_id)
+    end
+
+    def deactivate_percentage(feature)
+      @redis.del(percentage_key(feature))
     end
 
     def deactivate_all(feature)
@@ -29,31 +47,9 @@ class FeatureCreep
       deactivate_globally(feature)
     end
 
-    def activate_agent_id(feature, agent_id)
-      @redis.sadd(agent_id_key(feature), agent_id)
-    end
-
-    def deactivate_agent_id(feature, agent_id)
-      @redis.srem(agent_id_key(feature), agent_id)
-    end
-
-    def active?(feature, agent_id = nil)
-      if agent_id
-        active_globally?(feature) ||
-          agent_id_in_active_scope?(feature, agent_id) ||
-          agent_id_active?(feature, agent_id) ||
-          agent_id_within_active_percentage?(feature, agent_id)
-      else
-        active_globally?(feature)
-      end
-    end
-
-    def activate_percentage(feature, percentage)
-      @redis.set(percentage_key(feature), percentage)
-    end
-
-    def deactivate_percentage(feature)
-      @redis.del(percentage_key(feature))
+    # Reporting Methods
+    def active_global_features
+      (@redis.smembers(global_key) || []).map(&:to_sym)
     end
 
     def active_scopes(feature)
@@ -64,14 +60,11 @@ class FeatureCreep
       @redis.smembers(agent_id_key(feature))
     end
 
-    def active_global_features
-      (@redis.smembers(global_key) || []).map(&:to_sym)
-    end
-
     def active_percentage(feature)
       @redis.get(percentage_key(feature))
     end
 
+    # Boolean Methods
     def active_globally?(feature)
       @redis.sismember(global_key, feature)
     end
@@ -86,6 +79,7 @@ class FeatureCreep
       agent_id % 100 < percentage.to_i
     end
 
+    # Utility Methods
     def features
       @redis.smembers(@key_prefix).map(&:to_sym)
     end

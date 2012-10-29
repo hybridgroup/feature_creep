@@ -23,22 +23,22 @@ class FeatureCreep
 
   # Activate Methods
   def activate_globally(feature)
-    @add_feature(feature)
+    add_feature(feature)
     @datastore.activate_globally(feature)
   end
 
   def activate_scope(feature, scope)
-    @add_feature(feature)
+    add_feature(feature)
     @datastore.activate_scope(feature, scope)
   end
 
   def activate_agent_id(feature, agent_id)
-    @add_feature(feature)
+    add_feature(feature)
     @datastore.activate_agent_id(feature, agent_id)
   end
 
   def activate_percentage(feature, percentage)
-    @add_feature(feature)
+    add_feature(feature)
     @datastore.activate_percentage(feature, percentage)
   end
 

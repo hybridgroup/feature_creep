@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    feature_creep (0.1.2)
+    feature_creep (0.2.0)
       redis
 
 GEM
