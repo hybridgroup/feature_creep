@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "bourne", "1.0"
   s.add_development_dependency "mocha", "0.9.8"
   s.add_development_dependency "pry", "0.9.10"
+  s.add_development_dependency "feature_creep-redis"
+  s.add_development_dependency "feature_creep-simple_strategy", "0.0.2"
 
-  s.add_runtime_dependency "redis"
 end

@@ -3,12 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe "FeatureCreep" do
   before do
     @datastore = FeatureCreep::RedisDataStore.new
-    scopes = {
-      :fivesonly => lambda { |agent_id| agent_id == 5 }
-    }
-    @feature_creep = FeatureCreep.new(@datastore,FeatureCreep::DefaultConfig.warden,
-                                      FeatureCreep::DefaultConfig.info,
-                                      {:scopes => scopes, :features => [:test1, :test2]})
+    @feature_creep = FeatureCreep.new(@datastore,FeatureCreep::SimpleStrategy.warden,
+                                      FeatureCreep::SimpleStrategy.info,
+                                      {:scopes   => {:fivesonly => lambda { |agent_id| agent_id == 5 }},
+                                       :features => [:test1, :test2]})
   end
 
   describe ".new" do
