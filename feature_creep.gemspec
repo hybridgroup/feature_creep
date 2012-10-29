@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
   s.name = "feature_creep"
   s.version = FeatureCreep::VERSION
   s.authors = ["Christian Trosclair"]
-  s.email       = ["xn@gotham.us"]
+  s.email       = ["xn@hybridgroup.com"]
   s.description = "Feature Flag implementation"
   s.summary = "Extensible Feature Flags"
-  s.homepage = "https://github.com/xn/feature_creep"
+  s.homepage = "https://github.com/hybridgroup/feature_creep"
 
   s.require_paths = ["lib"]
 
