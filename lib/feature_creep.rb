@@ -21,58 +21,45 @@ class FeatureCreep
     end
   end
 
+  # Activate Methods
   def activate_globally(feature)
     @datastore.activate_globally(feature)
-  end
-
-  def deactivate_globally(feature)
-    @datastore.deactivate_globally(feature)
   end
 
   def activate_scope(feature, scope)
     @datastore.activate_scope(feature, scope)
   end
 
-  def deactivate_scope(feature, scope)
-    @datastore.deactivate_scope(feature, scope)
-  end
-
-  def deactivate_all(feature)
-    @datastore.deactivate_all(feature)
-  end
-
   def activate_agent_id(feature, agent_id)
     @datastore.activate_agent_id(feature, agent_id)
-  end
-
-  def deactivate_agent_id(feature, agent_id)
-    @datastore.deactivate_agent_id(feature, agent_id)
-  end
-
-  def active?(feature, agent_id = nil)
-    @warden.call(self,feature,agent_id)
   end
 
   def activate_percentage(feature, percentage)
     @datastore.activate_percentage(feature, percentage)
   end
 
+  # Deactivate Methods
+  def deactivate_globally(feature)
+    @datastore.deactivate_globally(feature)
+  end
+
+  def deactivate_scope(feature, scope)
+    @datastore.deactivate_scope(feature, scope)
+  end
+
+  def deactivate_agent_id(feature, agent_id)
+    @datastore.deactivate_agent_id(feature, agent_id)
+  end
+
   def deactivate_percentage(feature)
     @datastore.deactivate_percentage(feature)
   end
 
-  def features
-    @datastore.features
+  def deactivate_all(feature)
+    @datastore.deactivate_all(feature)
   end
 
-  def add_feature(feature)
-    @datastore.add_feature(feature)
-  end
-
-  def info(feature = nil)
-    @info.call(self,feature)
-  end
-
+  # Reporting Methods
   def active_scopes(feature)
     @datastore.active_scopes(feature)
   end
@@ -87,6 +74,11 @@ class FeatureCreep
 
   def active_percentage(feature)
     @datastore.active_percentage(feature)
+  end
+
+  # Boolean Methods
+  def active?(feature, agent_id = nil)
+    @warden.call(self,feature,agent_id)
   end
 
   def active_globally?(feature)
@@ -105,5 +97,18 @@ class FeatureCreep
 
   def agent_id_within_active_percentage?(feature, agent_id)
     @datastore.agent_id_within_active_percentage?(feature, agent_id)
+  end
+
+  # Utility Methods
+  def features
+    @datastore.features
+  end
+
+  def add_feature(feature)
+    @datastore.add_feature(feature)
+  end
+
+  def info(feature = nil)
+    @info.call(self,feature)
   end
 end
