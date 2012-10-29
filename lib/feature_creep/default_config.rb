@@ -1,7 +1,7 @@
 class FeatureCreep
-	class DefaultConfig
-		def self.info
-			lambda { |creep,feature|
+  class DefaultConfig
+    def self.info
+      lambda { |creep,feature|
         if feature
           {
             :percentage => (creep.active_percentage(feature) || 0).to_i,
@@ -18,9 +18,9 @@ class FeatureCreep
         end
       }
 
-		end
+    end
 
-		def self.warden
+    def self.warden
       lambda { |creep,feature,agent_id|
         if agent_id
           creep.active_globally?(feature) ||
@@ -31,6 +31,6 @@ class FeatureCreep
           creep.active_globally?(feature)
         end
       }
-		end
-	end
+    end
+  end
 end
