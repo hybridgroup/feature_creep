@@ -2,8 +2,10 @@ class FeatureCreep
 
   attr_accessor :scopes, :info, :warden
 
-  def initialize(datastore, options = {})
+  def initialize(datastore, warden, info, options = {})
     @datastore = datastore
+    @warden = warden
+    @info = info
     @scopes = {"all" => lambda { |agent_id| true }}
 
     if options.has_key?(:scopes)
@@ -16,41 +18,6 @@ class FeatureCreep
       options[:features].each do |feature|
         add_feature(feature)
       end
-    end
-
-    @warden = if options.has_key?(:warden)
-      options[:warden]
-    else
-      lambda { |feature,agent_id|
-        if agent_id
-          active_globally?(feature) ||
-            agent_id_in_active_scope?(feature, agent_id) ||
-            agent_id_active?(feature, agent_id) ||
-            agent_id_within_active_percentage?(feature, agent_id)
-        else
-          active_globally?(feature)
-        end
-      }
-    end
-
-    @info = if options.has_key?(:info)
-      options[:info]
-    else lambda { |feature|
-        if feature
-          {
-            :percentage => (active_percentage(feature) || 0).to_i,
-            :scopes     => active_scopes(feature).map { |g| g.to_sym },
-            :agent_ids      => active_agent_ids(feature),
-            :global     => active_global_features,
-            :available_features => features
-          }
-        else
-          {
-            :global     => active_global_features,
-            :available_features => features
-          }
-        end
-      }
     end
   end
 
@@ -83,7 +50,7 @@ class FeatureCreep
   end
 
   def active?(feature, agent_id = nil)
-    @warden.call(feature,agent_id)
+    @warden.call(self,feature,agent_id)
   end
 
   def activate_percentage(feature, percentage)
@@ -103,7 +70,7 @@ class FeatureCreep
   end
 
   def info(feature = nil)
-    @info.call(feature)
+    @info.call(self,feature)
   end
 
   def active_scopes(feature)

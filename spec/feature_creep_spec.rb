@@ -6,7 +6,9 @@ describe "FeatureCreep" do
     scopes = {
       :fivesonly => lambda { |agent_id| agent_id == 5 }
     }
-    @feature_creep = FeatureCreep.new(@datastore, {:scopes => scopes, :features => [:test1, :test2]})
+    @feature_creep = FeatureCreep.new(@datastore,FeatureCreep::DefaultConfig.warden,
+                                      FeatureCreep::DefaultConfig.info,
+                                      {:scopes => scopes, :features => [:test1, :test2]})
   end
 
   describe ".new" do
