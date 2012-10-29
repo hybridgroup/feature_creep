@@ -11,6 +11,11 @@ This is not a drop in replacement. The API has aleadey changed.
 Namely, `groups` are now `scopes` and `users` are `agent_ids`.
 Agent_ids are expected to be uuids, not the object itself.
 
+There are currently 3 gems in this ecosystem:
+`gem 'feature_creep'`
+`gem 'feature_creep-redis'`
+`gem 'feature_creep-simple_strategy'`
+
 The class constructor now takes
 
 `datastore` -- FeatureCreep::RedisDatastore is provided with more to come.
@@ -25,8 +30,9 @@ The class constructor now takes
 
 `options[:features]` is an array of strings or symbols that will add  to the list of all possible features.
 
-@feature_creep = FeatureCreep.new(@datastore,FeatureCreep::DefaultConfig.warden,
-                                  FeatureCreep::DefaultConfig.info,
+@feature_creep = FeatureCreep.new(FeatureCreep::RedisDataStore.new(Redis.new,"parent_namespace"),
+                                  FeatureCreep::SimpleStrategy.warden,
+                                  FeatureCreep::SimpleStrategy.info,
                                   {:scopes => {:some_scope_name => lambda { |agent_id| User.find(agent_id).can?(:some_scope) }}, :features => [:feature_1, :feature_2]})
 
 At this point it should be easy to extend.
