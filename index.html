@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Feature Creep</title>
+
+    <!-- mobile viewport optimization -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/scaffold.css">
+    <link rel="stylesheet" href="css/syntax.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a href="https://github.com/hybridgroup/feature_creep">
+          <img src="images/feature_creep.png">
+        </a>
+      </header>
+
+      <div id="main">
+        <section id="section-warning">
+          <h2 class="warning">Warning</h2>
+          <p>
+            Feature Creep's API is unstable right now. It should be usable
+            sometime soon, but until then consider it possessed by zombie ghosts
+            and trust it at your own peril.
+          </p>
+        </section>
+
+        <section id="section-introduction">
+          <h2>Introduction</h2>
+          <p>
+            Feature Creep allows you to conditionally roll out features. You can
+            use different backends and strategies, or write your own. Currently,
+            Feature Creep consists of three gems:
+          </p>
+
+          <ul>
+            <li><a href="https://github.com/hybridgroup/feature_creep"><code>feature_creep</code></a></li>
+            <li><a href="https://github.com/hybridgroup/feature_creep-redis"><code>feature_creep-redis</code></a></li>
+            <li><a href="https://github.com/hybridgroup/feature_creep-simple_strategy"><code>feature_creep-simple_strategy</code></a></li>
+          </ul>
+        </section>
+
+        <section id="section-installation">
+          <h2>Installation</h2>
+          <p>
+            Add the gems to your application's <code>Gemfile</code>:
+          </p>
+
+          <pre><code>gem 'feature_creep'
+gem 'feature_creep-redis'
+gem 'feature_creep-simple_strategy'</code></pre>
+
+          <p>
+            And then execute:
+          </p>
+
+          <pre><code>$ bundle</code></pre>
+
+          <p>
+            Or install the gems yourself:
+          </p>
+
+          <pre><code>$ gem install feature_creep feature_creep-redis feature_creep-simple_strategy</code></pre>
+        </section>
+
+        <section id="section-usage">
+          <h2>Usage</h2>
+
+<div class="highlight"><pre><span class="n">scope</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="n">agent_id</span><span class="o">|</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span><span class="o">.</span><span class="n">can?</span><span class="p">(</span><span class="ss">:some_scope</span><span class="p">)</span> <span class="p">}</span>
+
+<span class="vi">@feature_creep</span> <span class="o">=</span> <span class="no">FeatureCreep</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">FeatureCreep</span><span class="o">::</span><span class="no">RedisDataStore</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Redis</span><span class="o">.</span><span class="n">new</span><span class="p">,</span><span class="s2">"parent_namespace"</span><span class="p">),</span>
+                                  <span class="no">FeatureCreep</span><span class="o">::</span><span class="no">SimpleStrategy</span><span class="o">.</span><span class="n">warden</span><span class="p">,</span>
+                                  <span class="no">FeatureCreep</span><span class="o">::</span><span class="no">SimpleStrategy</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
+                                  <span class="p">{</span>
+                                    <span class="ss">:scopes</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:some_scope_name</span> <span class="o">=&gt;</span> <span class="n">scope</span><span class="p">},</span>
+                                    <span class="ss">:features</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:feature_1</span><span class="p">,</span> <span class="ss">:feature_2</span><span class="o">]</span>
+                                  <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+
+        </section>
+
+        <section id="section-more-info">
+          <h2>More Info</h2>
+          <p>You can find more info on GitHub for all three gems:</p>
+
+          <ul>
+            <li><a href="https://github.com/hybridgroup/feature_creep"><code>feature_creep</code></a></li>
+            <li><a href="https://github.com/hybridgroup/feature_creep-redis"><code>feature_creep-redis</code></a></li>
+            <li><a href="https://github.com/hybridgroup/feature_creep-simple_strategy"><code>feature_creep-simple_strategy</code></a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
