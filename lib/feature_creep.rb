@@ -6,7 +6,7 @@ class FeatureCreep
     @datastore = datastore
     @warden = warden
     @info = info
-    @scopes = {"all" => lambda { |agent_id| true }}
+    @scopes = {"all" => lambda { |individual| true }}
 
     if options.has_key?(:scopes)
       options[:scopes].each do |name,membership_block|
@@ -32,9 +32,9 @@ class FeatureCreep
     @datastore.activate_scope(feature, scope)
   end
 
-  def activate_agent_id(feature, agent_id)
+  def activate_individual(feature, individual)
     add_feature(feature)
-    @datastore.activate_agent_id(feature, agent_id)
+    @datastore.activate_individual(feature, individual)
   end
 
   def activate_percentage(feature, percentage)
@@ -51,8 +51,8 @@ class FeatureCreep
     @datastore.deactivate_scope(feature, scope)
   end
 
-  def deactivate_agent_id(feature, agent_id)
-    @datastore.deactivate_agent_id(feature, agent_id)
+  def deactivate_individual(feature, individual)
+    @datastore.deactivate_individual(feature, individual)
   end
 
   def deactivate_percentage(feature)
@@ -68,8 +68,8 @@ class FeatureCreep
     @datastore.active_scopes(feature)
   end
 
-  def active_agent_ids(feature)
-    @datastore.active_agent_ids(feature)
+  def active_individuals(feature)
+    @datastore.active_individuals(feature)
   end
 
   def active_global_features
@@ -81,26 +81,26 @@ class FeatureCreep
   end
 
   # Boolean Methods
-  def active?(feature, agent_id = nil)
-    @warden.call(self,feature,agent_id)
+  def active?(feature, individual = nil)
+    @warden.call(self,feature,individual)
   end
 
   def active_globally?(feature)
     @datastore.active_globally?(feature)
   end
 
-  def agent_id_in_active_scope?(feature, agent_id)
+  def individual_in_active_scope?(feature, individual)
     active_scopes(feature).any? do |scope|
-      @scopes.key?(scope) && @scopes[scope].call(agent_id)
+      @scopes.key?(scope) && @scopes[scope].call(individual)
     end
   end
 
-  def agent_id_active?(feature, agent_id)
-    @datastore.agent_id_active?(feature, agent_id)
+  def individual_active?(feature, individual)
+    @datastore.individual_active?(feature, individual)
   end
 
-  def agent_id_within_active_percentage?(feature, agent_id)
-    @datastore.agent_id_within_active_percentage?(feature, agent_id)
+  def individual_within_active_percentage?(feature, individual)
+    @datastore.individual_within_active_percentage?(feature, individual)
   end
 
   # Utility Methods

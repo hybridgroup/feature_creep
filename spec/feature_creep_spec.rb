@@ -5,7 +5,7 @@ describe "FeatureCreep" do
     @datastore = FeatureCreep::RedisDataStore.new
     @feature_creep = FeatureCreep.new(@datastore,FeatureCreep::SimpleStrategy.warden,
                                       FeatureCreep::SimpleStrategy.info,
-                                      {:scopes   => {:fivesonly => lambda { |agent_id| agent_id == 5 }},
+                                      {:scopes   => {:fivesonly => lambda { |individual| individual == 5 }},
                                        :features => [:test1, :test2]})
   end
 
@@ -32,11 +32,11 @@ describe "FeatureCreep" do
       @feature_creep.activate_scope(:chat, :fivesonly)
     end
 
-    it "the feature is active for agent_ids for which the block evaluates to true" do
+    it "the feature is active for individuals for which the block evaluates to true" do
       @feature_creep.should be_active(:chat, 5)
     end
 
-    it "is not active for agent_ids for which the block evaluates to false" do
+    it "is not active for individuals for which the block evaluates to false" do
       @feature_creep.should_not be_active(:chat, 1)
     end
 
@@ -76,7 +76,7 @@ describe "FeatureCreep" do
     before do
       @feature_creep.activate_scope(:chat, :all)
       @feature_creep.activate_scope(:chat, :fivesonly)
-      @feature_creep.activate_agent_id(:chat, 51)
+      @feature_creep.activate_individual(:chat, 51)
       @feature_creep.activate_percentage(:chat, 100)
       @feature_creep.activate_globally(:chat)
       @feature_creep.deactivate_all(:chat)
@@ -86,7 +86,7 @@ describe "FeatureCreep" do
       @feature_creep.should_not be_active(:chat, 0)
     end
 
-    it "removes all of the agent_ids" do
+    it "removes all of the individuals" do
       @feature_creep.should_not be_active(:chat, 51)
     end
 
@@ -99,32 +99,32 @@ describe "FeatureCreep" do
     end
   end
 
-  describe "activating a specific agent_id" do
+  describe "activating a specific individual" do
     before do
-      @feature_creep.activate_agent_id(:chat, 42)
+      @feature_creep.activate_individual(:chat, 42)
     end
 
-    it "is active for that agent_id" do
+    it "is active for that individual" do
       @feature_creep.should be_active(:chat, 42)
     end
 
-    it "remains inactive for other agent_ids" do
+    it "remains inactive for other individuals" do
       @feature_creep.should_not be_active(:chat, 24)
     end
   end
 
-  describe "deactivating a specific agent_id" do
+  describe "deactivating a specific individual" do
     before do
-      @feature_creep.activate_agent_id(:chat, 42)
-      @feature_creep.activate_agent_id(:chat, 24)
-      @feature_creep.deactivate_agent_id(:chat, 42)
+      @feature_creep.activate_individual(:chat, 42)
+      @feature_creep.activate_individual(:chat, 24)
+      @feature_creep.deactivate_individual(:chat, 42)
     end
 
-    it "that agent_id should no longer be active" do
+    it "that individual should no longer be active" do
       @feature_creep.should_not be_active(:chat, 42)
     end
 
-    it "remains active for other active agent_ids" do
+    it "remains active for other active individuals" do
       @feature_creep.should be_active(:chat, 24)
     end
   end
@@ -139,44 +139,44 @@ describe "FeatureCreep" do
     end
   end
 
-  describe "activating a feature for a percentage of agent_ids" do
+  describe "activating a feature for a percentage of individuals" do
     before do
       @feature_creep.activate_percentage(:chat, 20)
     end
 
-    it "activates the feature for that percentage of the agent_ids" do
+    it "activates the feature for that percentage of the individuals" do
       (1..120).select { |id| @feature_creep.active?(:chat, id) }.length.should == 39
     end
   end
 
-  describe "activating a feature for a percentage of agent_ids" do
+  describe "activating a feature for a percentage of individuals" do
     before do
       @feature_creep.activate_percentage(:chat, 20)
     end
 
-    it "activates the feature for that percentage of the agent_ids" do
+    it "activates the feature for that percentage of the individuals" do
       (1..200).select { |id| @feature_creep.active?(:chat, id) }.length.should == 40
     end
   end
 
-  describe "activating a feature for a percentage of agent_ids" do
+  describe "activating a feature for a percentage of individuals" do
     before do
       @feature_creep.activate_percentage(:chat, 5)
     end
 
-    it "activates the feature for that percentage of the agent_ids" do
+    it "activates the feature for that percentage of the individuals" do
       (1..100).select { |id| @feature_creep.active?(:chat, id) }.length.should == 5
     end
   end
 
 
-  describe "deactivating the percentage of agent_ids" do
+  describe "deactivating the percentage of individuals" do
     before do
       @feature_creep.activate_percentage(:chat, 100)
       @feature_creep.deactivate_percentage(:chat)
     end
 
-    it "becomes inactivate for all agent_ids" do
+    it "becomes inactivate for all individuals" do
       @feature_creep.should_not be_active(:chat, 24)
     end
   end
@@ -214,14 +214,14 @@ describe "FeatureCreep" do
         @feature_creep.activate_scope(:chat, :caretakers)
         @feature_creep.activate_scope(:chat, :greeters)
         @feature_creep.activate_globally(:signup)
-        @feature_creep.activate_agent_id(:chat, 42)
+        @feature_creep.activate_individual(:chat, 42)
       end
 
       it "returns info about all the activations" do
         @feature_creep.info(:chat).should == {
           :percentage => 10,
           :scopes     => [:greeters, :caretakers],
-          :agent_ids      => ["42"],
+          :individuals      => ["42"],
           :global     => [:signup],
           :available_features => [:chat, :test1, :signup, :test2]
         }
@@ -233,7 +233,7 @@ describe "FeatureCreep" do
         @feature_creep.info(:chat).should == {
           :percentage => 0,
           :scopes     => [],
-          :agent_ids      => [],
+          :individuals      => [],
           :global     => [],
           :available_features=>[:test1, :test2]
         }

@@ -8,7 +8,7 @@ This is a fork/rewrite of James Golick's Rollout with messy and incomplete docs.
 So far, the specs are green and are mostly inherited from Rollout.
 This is not a drop in replacement. The API has aleadey changed.
 
-Namely, `groups` are now `scopes` and `users` are `agent_ids`.
+Namely, `groups` are now `scopes` and `users` are `individuals`.
 Agent_ids are expected to be uuids, not the object itself.
 
 There are currently 3 gems in this ecosystem:
@@ -33,7 +33,7 @@ The class constructor now takes
 @feature_creep = FeatureCreep.new(FeatureCreep::RedisDataStore.new(Redis.new,"parent_namespace"),
                                   FeatureCreep::SimpleStrategy.warden,
                                   FeatureCreep::SimpleStrategy.info,
-                                  {:scopes => {:some_scope_name => lambda { |agent_id| User.find(agent_id).can?(:some_scope) }}, :features => [:feature_1, :feature_2]})
+                                  {:scopes => {:some_scope_name => lambda { |individual| User.find(individual).can?(:some_scope) }}, :features => [:feature_1, :feature_2]})
 
 At this point it should be easy to extend.
 I would expect the API to stablize over the next couple of weeks.
