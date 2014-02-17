@@ -6,7 +6,7 @@ I've got your feature flags implementation right here.
 This is a fork/rewrite of James Golick's Rollout with messy and incomplete docs.
 
 So far, the specs are green and are mostly inherited from Rollout.
-This is not a drop in replacement. The API has aleadey changed.
+This is not a drop in replacement. The API has already changed.
 
 Namely, `groups` are now `scopes` and `users` are `individuals`.
 Agent_ids are expected to be uuids, not the object itself.
